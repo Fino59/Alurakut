@@ -103,21 +103,7 @@ export default function Home() {
         </div>
         
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-          <ProfileRelationsBoxWrapper>
-            <ul>
-                {communities.map((itemAtual) => {
-                  return (
-                    <li key={itemAtual.id}>
-                      <a href={`/users/${itemAtual.title}`} >
-                        <img src={itemAtual.image} />
-                        <span>{itemAtual.title}</span>
-                      </a>
-                    </li>
-                  )
-                })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
-
+          
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
               Pessoas da comunidade ({favoritePeople.length})
@@ -135,10 +121,26 @@ export default function Home() {
                 )
               })}
             </ul>
+          </ProfileRelationsBoxWrapper>         
+
+          <ProfileRelationsBoxWrapper>
+          <h2 className="smallTitle">
+              Comunidade ({communities.length})
+            </h2>
+            <ul>
+                {communities.map((itemAtual) => {
+                  return (
+                    <li key={itemAtual.id}>
+                      <a href={`/users/${itemAtual.title}`} >
+                        <img src={itemAtual.image} />
+                        <span>{itemAtual.title}</span>
+                      </a>
+                    </li>
+                  )
+                })}
+            </ul>
           </ProfileRelationsBoxWrapper>
-          <Box >
-            Comunidades
-          </Box>
+          
         </div>        
 
       </MainGrid>

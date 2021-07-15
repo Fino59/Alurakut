@@ -3,7 +3,7 @@ import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box';
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
-import { baseCommunities, orkutDocs, trustCoolSexyCounter } from '../src/lib/database/database';
+import { orkutDocs, trustCoolSexyCounter } from '../src/lib/database/database';
 
 function ProfileSideBar(props) { 
     
@@ -48,9 +48,9 @@ function ProfileRelationsBox(props) {
 }
 
 export default function Home() {
-  const [communities, setCommunity] = React.useState(baseCommunities);
   const githubUser = 'Fino59';
-  
+  const [communities, setCommunity] = React.useState([]);
+  const [following, setFollowing] = React.useState([]);
   const [followers, setFollowers] = React.useState([]);
   React.useEffect(function() {
     fetch('https://api.github.com/users/Fino59/followers')
@@ -60,10 +60,6 @@ export default function Home() {
     .then(function(completeAnswer) {
       setFollowers(completeAnswer);
     })
-  }, [])
-
-  const [following, setFollowing] = React.useState([]);
-  React.useEffect(function() {
     fetch('https://api.github.com/users/Fino59/following')
     .then(function (serverAnswer) {
       return serverAnswer.json();
@@ -71,7 +67,29 @@ export default function Home() {
     .then(function(completeAnswer) {
       setFollowing(completeAnswer);
     })
-  }, [])
+    fetch('https://graphql.datocms.com/', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'f3109eb8354d47effc7d9795c660a5',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }, 
+      body: JSON.stringify({ "query": `query {
+        allCommunities {
+          title
+          id
+          imageUrl
+          creatorSlug
+        }
+      }` })
+    })
+    .then((response) => response.json())
+    .then((completeAnswer) => {
+      const communitiesCameFromDato = completeAnswer.data.allComunities;
+      setCommunity(communitiesCameFromDato)
+    })
+  }, [])  
+ 
 
   return (
     <>

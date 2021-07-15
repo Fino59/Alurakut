@@ -1,6 +1,6 @@
 export const baseCommunities = [
     {id: new Date().toISOString(), title: "Eu odeio acordar cedo!", image: "https://alurakut.vercel.app/capa-comunidade-01.jpg"},
-    {id: new Date().toISOString(), title: "Lênin, de três", image: "https://img10.orkut.br.com/community/f0131f9cec84100d3b7e02bd8a9323c2.jpg"},
+    {id: new Date().toISOString(), title: "Lênin, de três", image: "https://i.imgur.com/c2rEEb6.png"},
     {id: new Date().toISOString(), title: "Deftones", image: "https://i.imgur.com/rBToEMB.jpg"},
     {id: new Date().toISOString(), title: "New Metal And Others", image: "https://i.imgur.com/2G1EFvi.jpg"},
     {id: new Date().toISOString(), title: "Tenho medo da Véia (o) Quaker!", image: "https://i.imgur.com/rCbmWFi.jpg"},

@@ -50,6 +50,7 @@ function ProfileRelationsBox(props) {
 export default function Home() {
   const githubUser = 'Fino59';
   const [communities, setCommunity] = React.useState([]);
+  console.log([setCommunity])
   const [following, setFollowing] = React.useState([]);
   const [followers, setFollowers] = React.useState([]);
   React.useEffect(function() {
@@ -83,9 +84,9 @@ export default function Home() {
         }
       }` })
     })
-    .then((response) => response.json())
+    .then(response => response.json())
     .then((completeAnswer) => {
-      const communitiesCameFromDato = completeAnswer.data.allComunities;
+      const communitiesCameFromDato = completeAnswer.data.allCommunities;
       setCommunity(communitiesCameFromDato)
     })
   }, [])  
@@ -161,21 +162,22 @@ export default function Home() {
 
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
-              Comunidades ({communities.length})
+              Comunidades ({ communities.length })
             </h2>
               <ul>
                   {communities.map((itemAtual) => {
                     return (
                       <li key={itemAtual.id}>
                         <a href={`/users/${itemAtual.title}`} >
-                          <img src={itemAtual.image} />
+                          <img src={itemAtual.imageUrl} />
                           <span>{itemAtual.title}</span>
                         </a>
                       </li>
                     )
                   })}
               </ul>
-          </ProfileRelationsBoxWrapper>
+          </ProfileRelationsBoxWrapper> 
+          
           
         </div>        
 

@@ -3,6 +3,7 @@ import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box';
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
+import { baseCommunities, orkutDocs, trustCoolSexyCounter } from '../src/lib/database/database';
 
 function ProfileSideBar(props) { 
     
@@ -24,21 +25,53 @@ function ProfileSideBar(props) {
   )
 };
 
+function ProfileRelationsBox(props) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {props.title} ({props.items.length})
+      </h2>
+      <ul>
+      {props.items.slice(0,6).map((itemAtual) => {
+          return (
+            <li key={itemAtual.id}>
+              <a href={itemAtual.html_url} target="_blank" rel="noopener noreferrer">
+                <img src={itemAtual.avatar_url} />
+                <span>{itemAtual.login}</span>
+              </a>
+            </li>
+          ); 
+        })}
+      </ul>
+      </ProfileRelationsBoxWrapper>
+  );
+}
+
 export default function Home() {
-  const [communities, setCommunity] = React.useState([{
-    id: '',
-    title: 'Eu odeio acordar cedo',
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-  }]);
+  const [communities, setCommunity] = React.useState(baseCommunities);
   const githubUser = 'Fino59';
-  const favoritePeople = [
-    'juunegreiros', 
-    'omariosouto', 
-    'rafaballerini',
-    'marcobrunodev',
-    'RodrigoPaivaDev',
-    'gustavoguanabara'    
-  ];
+  
+  const [followers, setFollowers] = React.useState([]);
+  React.useEffect(function() {
+    fetch('https://api.github.com/users/Fino59/followers')
+    .then(function (serverAnswer) {
+      return serverAnswer.json();
+    })
+    .then(function(completeAnswer) {
+      setFollowers(completeAnswer);
+    })
+  }, [])
+
+  const [following, setFollowing] = React.useState([]);
+  React.useEffect(function() {
+    fetch('https://api.github.com/users/Fino59/following')
+    .then(function (serverAnswer) {
+      return serverAnswer.json();
+    })
+    .then(function(completeAnswer) {
+      setFollowing(completeAnswer);
+    })
+  }, [])
 
   return (
     <>
@@ -52,10 +85,10 @@ export default function Home() {
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
           <Box>
             <h1 className="title">
-              Bem vindo(a)
+              Bem vindo(a) {githubUser}
             </h1>
 
-            <OrkutNostalgicIconSet />
+            <OrkutNostalgicIconSet orkutDocs={orkutDocs} trustCoolSexyCounter={trustCoolSexyCounter} />
 
           </Box>
 
@@ -104,41 +137,26 @@ export default function Home() {
         
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
           
+          <ProfileRelationsBox title="Seguidores" items={followers} />
+
+          <ProfileRelationsBox title="Seguindo" items={following} />
+
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
-              Pessoas da comunidade ({favoritePeople.length})
+              Comunidades ({communities.length})
             </h2>
-
-            <ul>
-              {favoritePeople.map((itemAtual) => {
-                return (
-                  <li key={itemAtual} >
-                    <a href={`/users/${itemAtual}`} >
-                      <img src={`https://github.com/${itemAtual}.png`} />
-                      <span>{itemAtual}</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>         
-
-          <ProfileRelationsBoxWrapper>
-          <h2 className="smallTitle">
-              Comunidade ({communities.length})
-            </h2>
-            <ul>
-                {communities.map((itemAtual) => {
-                  return (
-                    <li key={itemAtual.id}>
-                      <a href={`/users/${itemAtual.title}`} >
-                        <img src={itemAtual.image} />
-                        <span>{itemAtual.title}</span>
-                      </a>
-                    </li>
-                  )
-                })}
-            </ul>
+              <ul>
+                  {communities.map((itemAtual) => {
+                    return (
+                      <li key={itemAtual.id}>
+                        <a href={`/users/${itemAtual.title}`} >
+                          <img src={itemAtual.image} />
+                          <span>{itemAtual.title}</span>
+                        </a>
+                      </li>
+                    )
+                  })}
+              </ul>
           </ProfileRelationsBoxWrapper>
           
         </div>        

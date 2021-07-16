@@ -49,8 +49,7 @@ function ProfileRelationsBox(props) {
 
 export default function Home() {
   const githubUser = 'Fino59';
-  const [communities, setCommunity] = React.useState([]);
-  console.log([setCommunity])
+  const [communities, setCommunity] = React.useState([]);  
   const [following, setFollowing] = React.useState([]);
   const [followers, setFollowers] = React.useState([]);
   React.useEffect(function() {
@@ -121,12 +120,26 @@ export default function Home() {
 
 
               const community = {
-                id: new Date().toISOString,
                 title: dataFromform.get('title'),
-                image: dataFromform.get('image'),
+                imageUrl: dataFromform.get('image'),
+                creatorSlug: githubUser,
               }
-              const communityUpdated = [...communities, community ];
-              setCommunity (communityUpdated); 
+
+              fetch('/api/community', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',                  
+                },
+                body: JSON.stringify(community)
+              })
+              .then(async (response) => {
+                const data = await response.json();
+                console.log(data.createRegister); 
+                const community = data.createRegister;
+                const communityUpdated = [...communities, community ];
+                setCommunity(communityUpdated); 
+              })
+
 
             }}>
               <div>
@@ -168,7 +181,7 @@ export default function Home() {
                   {communities.map((itemAtual) => {
                     return (
                       <li key={itemAtual.id}>
-                        <a href={`/users/${itemAtual.title}`} >
+                        <a href={`/communities/${itemAtual.id}`} >
                           <img src={itemAtual.imageUrl} />
                           <span>{itemAtual.title}</span>
                         </a>
